@@ -1,70 +1,54 @@
 const API_KEY = "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";
-let MODEL = "llama3-8b-8192";
+const MODEL = "llama3-8b-8192";
 let chatHistory = JSON.parse(localStorage.getItem("mindai_chat")) || [];
 
-document.getElementById("brand").addEventListener("click", () => {
-  const menu = document.getElementById("model-dropdown");
-  menu.classList.toggle("hidden");
-});
-
-function subscribeAlert() {
-  alert("To unlock Pro, subscribe to:\nwww.youtube.com/@MindAI-Shorts10");
-}
-
-function subscribeNow(e) {
-  e.stopPropagation();
-  window.open("https://www.youtube.com/@MindAI-Shorts10", "_blank");
-}
-
-function setModel(type) {
-  MODEL = "llama3-8b-8192"; // Both are same for now
-  const options = document.querySelectorAll('.model-option');
-  options.forEach(opt => opt.classList.remove('selected'));
-  event.currentTarget.classList.add('selected');
-  document.getElementById("model-dropdown").classList.add("hidden");
-}
-
-async function sendMessage() {
+function insertPrompt(text) {
   const input = document.getElementById("userInput");
-  const message = input.value.trim();
-  if (!message) return;
-
-  addToChat("You", message, "user");
-  chatHistory.push({ role: "user", content: message });
-  input.value = "";
-  localStorage.setItem("mindai_chat", JSON.stringify(chatHistory));
-  document.getElementById("typing").style.display = "block";
-
-  try {
-    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        messages: chatHistory
-      })
-    });
-
-    const data = await res.json();
-    const reply = data.choices[0].message.content;
-    chatHistory.push({ role: "assistant", content: reply });
-    localStorage.setItem("mindai_chat", JSON.stringify(chatHistory));
-    addToChat("Mind Ai", reply, "bot");
-  } catch (err) {
-    addToChat("Mind Ai", "⚠️ Error reaching the server. Try again.", "bot");
-  }
-
-  document.getElementById("typing").style.display = "none";
+  input.value = text;
+  input.focus();
 }
 
-function addToChat(sender, text, type) {
+function addToChat(sender, text, role) {
   const chatbox = document.getElementById("chatbox");
   const msg = document.createElement("div");
-  msg.className = `message ${type}`;
+  msg.className = `message ${role}`;
   msg.textContent = text;
   chatbox.appendChild(msg);
   chatbox.scrollTop = chatbox.scrollHeight;
 }
+
+async function sendMessage() {
+  const input = document.getElementById("userInput");
+  const text = input.value.trim();
+  if (!text) return;
+
+  addToChat("You", text, "user");
+  chatHistory.push({ role: "user", content: text });
+  input.value = "";
+  document.getElementById("typing").classList.remove("hidden");
+  localStorage.setItem("mindai_chat", JSON.stringify(chatHistory));
+
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      messages: chatHistory
+    })
+  });
+
+  const data = await res.json();
+  const reply = data.choices[0].message.content;
+  chatHistory.push({ role: "assistant", content: reply });
+  localStorage.setItem("mindai_chat", JSON.stringify(chatHistory));
+  addToChat("Mind AI", reply, "bot");
+  document.getElementById("typing").classList.add("hidden");
+}
+
+// Send message on Enter
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendMessage();
+});
