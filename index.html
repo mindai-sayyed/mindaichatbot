@@ -1,40 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Mind AI</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <h1>Mind AI <span class="dropdown">▼
-      <div class="plans">
-        <p><strong>Normal</strong><br><small>Best for everyday tasks</small></p>
-        <p><strong>Pro</strong><br><small>Smartest model - Subscribe to <a href="https://www.youtube.com/@MindAI-Shorts10" target="_blank">our channel</a></small></p>
-      </div>
-    </span></h1>
-  </header>
+* {
+  box-sizing: border-box;
+}
 
-  <main>
-    <section id="prompt-templates">
-      <h3>Prompt Templates</h3>
-      <div class="template-list">
-        <button onclick="insertPrompt('Summarize this text: ')">Summarize</button>
-        <button onclick="insertPrompt('Explain this like I am 5: ')">Explain Like 5</button>
-        <button onclick="insertPrompt('Translate to Hindi: ')">Translate</button>
-        <button onclick="insertPrompt('Write a YouTube video script about: ')">YT Script</button>
-      </div>
-    </section>
+body {
+  margin: 0;
+  background-color: #121212;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    <div id="chatbox"></div>
-    <div id="typing" class="hidden">Mind AI is typing<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
+#chat-section {
+  width: 100%;
+  max-width: 800px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-    <div id="input-area">
-      <input type="text" id="userInput" placeholder="Type your message...">
-      <button onclick="sendMessage()">➤</button>
-    </div>
-  </main>
+#chat-header {
+  padding: 16px;
+  text-align: center;
+  font-size: 18px;
+  background-color: #1f1f1f;
+  color: white;
+  border-bottom: 1px solid #2a2a2a;
+}
 
-  <script src="script.js"></script>
-</body>
-</html>
+#chatbox {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.message {
+  max-width: 80%;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.user {
+  align-self: flex-end;
+  background-color: #1f1f1f;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+.bot {
+  align-self: flex-start;
+  background-color: #2a2a2a;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+#input-area {
+  display: flex;
+  padding: 10px;
+  background-color: #1a1a1a;
+}
+
+#userInput {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #333;
+  color: white;
+}
+
+#input-area button {
+  margin-left: 10px;
+  padding: 12px 16px;
+  background-color: #4a90e2;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+}
+
+#prompt-templates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px;
+  background-color: #1a1a1a;
+  border-top: 1px solid #2a2a2a;
+}
+
+.template-btn {
+  background-color: #2d2d2d;
+  color: white;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.template-btn:hover {
+  background-color: #3a3a3a;
+}
